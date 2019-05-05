@@ -1,5 +1,5 @@
 variable "region" {
-  default = "us-east-1"
+  default = "ap-south-1"
 }
 
 variable "instance_type" {
@@ -10,3 +10,4 @@ variable "cluster_id" {
   default = "rke"
 }
 
+variable "ssh_key_path" {}

@@ -13,28 +13,28 @@ resource "rke_cluster" "cluster" {
   nodes {
     address = "${module.nodes.addresses[0]}"
     user    = "${module.nodes.ssh_username}"
-    ssh_key = "${module.nodes.private_key}"
+    ssh_key = "${var.ssh_key_path}"
     role    = ["controlplane", "etcd"]
   }
 
   nodes {
     address = "${module.nodes.addresses[1]}"
     user    = "${module.nodes.ssh_username}"
-    ssh_key = "${module.nodes.private_key}"
+    ssh_key = "${var.ssh_key_path}"
     role    = ["worker"]
   }
 
   nodes {
     address = "${module.nodes.addresses[2]}"
     user    = "${module.nodes.ssh_username}"
-    ssh_key = "${module.nodes.private_key}"
+    ssh_key = "${var.ssh_key_path}"
     role    = ["worker"]
   }
 
   nodes {
     address = "${module.nodes.addresses[3]}"
     user    = "${module.nodes.ssh_username}"
-    ssh_key = "${module.nodes.private_key}"
+    ssh_key = "${var.ssh_key_path}"
     role    = ["worker"]
   }
 }

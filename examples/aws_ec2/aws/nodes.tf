@@ -41,26 +41,36 @@ resource "aws_security_group" "allow-all" {
   tags = "${local.cluster_id_tag}"
 }
 
+data "template_file" "node_userdata" {
+  template = "${file("${path.module}/templates/node_userdata.tpl")}"
+}
+
 resource "aws_instance" "rke-node" {
   count = 4
 
   ami                    = "${data.aws_ami.ubuntu.id}"
   instance_type          = "${var.instance_type}"
-  key_name               = "${aws_key_pair.rke-node-key.key_name}"
+  key_name               = "rke-test"
   iam_instance_profile   = "${aws_iam_instance_profile.rke-aws.name}"
   vpc_security_group_ids = ["${aws_security_group.allow-all.id}"]
   tags                   = "${local.cluster_id_tag}"
 
+  # user_data              = "${data.template_file.node_userdata.rendered}"
+
   provisioner "remote-exec" {
     connection {
-      host        = "coalesce(${self.public_ip}, ${self.private_ip})"
+      host        = "${coalesce(self.public_ip, self.private_ip)}"
       type        = "ssh"
       user        = "ubuntu"
-      private_key = "${tls_private_key.node-key.private_key_pem}"
+      private_key = "${var.ssh_key_path}"
     }
 
     inline = [
-      "curl releases.rancher.com/install-docker/1.12.sh | bash",
+      "curl https://releases.rancher.com/install-docker/17.03.sh | sh",
+
+      # https://github.com/hashicorp/terraform/issues/1025#issuecomment-84139959
+      "sudo apt-get update",
+
       "sudo usermod -a -G docker ubuntu",
     ]
   }
