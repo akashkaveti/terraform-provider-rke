@@ -1,5 +1,5 @@
 output "private_key" {
-  value = "${tls_private_key.node-key.private_key_pem}"
+  value = "${file("${path.module}/rke_node_key.pem")}"
 }
 
 output "ssh_username" {

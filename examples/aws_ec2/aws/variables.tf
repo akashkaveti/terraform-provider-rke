@@ -6,8 +6,12 @@ variable "instance_type" {
   default = "t2.micro"
 }
 
+variable "key_name" {}
+
 variable "cluster_id" {
   default = "rke"
 }
 
-variable "ssh_key_path" {}
+variable "ssh_key_path" {
+  default = "${file(/Users/akaveti/rke-node-key)}"
+}
